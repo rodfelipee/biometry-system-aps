@@ -1,11 +1,9 @@
-from tkinter import font
 import cv2 as cv
-import mediapipe as mp
 import sys
 from tkinter import *
 
-
-class App():
+#Inicializando a classe Main
+class Main():
     def __init__(self):
 
         # Criando a janela inicial
@@ -17,7 +15,7 @@ class App():
         # Setando uma fonte padrao
         self.fonte = ('Calibri', '13')
 
-        # Label
+        # Label top
         self.text = Label(self.root, text="Bem vindo!\nSelecione abaixo o que deseja fazer:",
                           justify=CENTER, font=self.fonte, bg='#202020', fg='#ffffff')
         self.text.place(relx=0.5, rely=0.5, y=-150, anchor='s')
@@ -34,7 +32,7 @@ class App():
 
         self.root.mainloop()
 
-    # Evento para fechar a aplicacao
+    # Fechar aplicacao
     def close(self, event):
         sys.exit(0)
 
@@ -54,4 +52,5 @@ class App():
         cv.destroyAllWindows()
 
 
-main = App()
+if __name__ == "__main__":
+    main = Main()
