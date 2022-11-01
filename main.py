@@ -1,4 +1,5 @@
 import cv2 as cv
+import mediapipe as mp
 import sys
 from tkinter import *
 
@@ -22,12 +23,12 @@ class Main():
 
         # Botao Adm
         self.button1 = Button(self.root, text="Acessar como Administrador", justify=CENTER,
-                              font=self.fonte, bg="#323232", fg="#FFFFFF", width=25, command=lambda: self.connectCam())
+                              font=self.fonte, bg="#323232", fg="#FFFFFF", width=25, command=lambda: self.turnCamOn())
         self.button1.place(relx=0.5, rely=0.5, y=-50, anchor='s')
 
         # Botao Operador
         self.button2 = Button(self.root, text="Acessar como Operador", justify=CENTER, font=self.fonte,
-                              bg="#323232", fg="#FFFFFF", width=25, command=lambda: self.connectCam())
+                              bg="#323232", fg="#FFFFFF", width=25, command=lambda: self.TurnCamOn())
         self.button2.place(relx=0.5, rely=0.5, y=0, anchor='s')
 
         self.root.mainloop()
@@ -37,7 +38,7 @@ class Main():
         sys.exit(0)
 
     # Inicializando a camera do dispositivo
-    def connectCam(self):
+    def TurnCamOn(self):
         cam = cv.VideoCapture(0)
 
         while(1):
