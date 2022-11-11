@@ -3,7 +3,9 @@ import ctypes
 import sys
 from tkinter import *
 
-#Inicializando a classe Main
+# Inicializando a classe Main
+
+
 class Main():
     def __init__(self):
 
@@ -16,10 +18,9 @@ class Main():
 
         self.inicio = Toplevel()
         self.inicio.title('Biometry Login')
-        self.inicio.resizable(0,0)
+        self.inicio.resizable(0, 0)
         self.inicio.config(bg="#202020", height=500, width=500)
         self.centerWindow(self.inicio)
-
 
         # Label top
         self.text = Label(self.inicio, text="Bem vindo!\nSelecione abaixo o que deseja fazer:",
@@ -38,7 +39,8 @@ class Main():
         self.button2.place(relx=0.5, rely=0.5, y=0, anchor='s')
 
         # Botao adicionar rosto
-        self.button3 = Button(self.inicio, text="Adicionar um novo rosto", justify=CENTER, font=self.fonte, bg="#323232", fg="#FFFFFF", width=25, command=lambda: self.changeToaddLogin())
+        self.button3 = Button(self.inicio, text="Adicionar um novo rosto", justify=CENTER, font=self.fonte,
+                              bg="#323232", fg="#FFFFFF", width=25, command=lambda: self.changeToaddLogin())
         self.button3.place(relx=0.5, rely=0.5, y=225, anchor='s')
 
         # Binds
@@ -59,23 +61,27 @@ class Main():
         self.addLogin.resizable()
         self.addLogin.config(bg='#202020', width=350, height=350)
         self.centerWindow(self.addLogin)
-        
+
         # Texto / Label
-        self.texto = Label(self.addLogin, text="insira a senha mestre para registrar um usuario", justify=CENTER, font=self.fonte, bg='#202020', fg='#ffffff')
+        self.texto = Label(self.addLogin, text="insira a senha mestre para registrar um usuario",
+                           justify=CENTER, font=self.fonte, bg='#202020', fg='#ffffff')
         self.texto.place(relx=0.5, rely=0.5, y=-100, anchor='s')
 
-        self.entryPassw = Entry(self.addLogin, justify=CENTER, font=self.fonte, bg='#505050', fg='#FFFFFF', width=25, show='*')
+        self.entryPassw = Entry(self.addLogin, justify=CENTER, font=self.fonte,
+                                bg='#505050', fg='#FFFFFF', width=25, show='*')
         self.entryPassw.place(relx=0.5, rely=0.5, y=-50, anchor='s')
         self.entryPassw.focus()
-        
-        self.btnEntrar = Button(self.addLogin, text='Entrar', font=self.fonte, width=25, justify=CENTER, bg='#303030', fg='#ffffff', command=lambda: self.checkPassword(self.entryPassw.get()))
-        self.btnEntrar.place(relx=0.5, rely=0.5, y= -0, anchor='s')
+
+        self.btnEntrar = Button(self.addLogin, text='Entrar', font=self.fonte, width=25, justify=CENTER,
+                                bg='#303030', fg='#ffffff', command=lambda: self.checkPassword(self.entryPassw.get()))
+        self.btnEntrar.place(relx=0.5, rely=0.5, y=-0, anchor='s')
 
         # Binds
         self.addLogin.bind('<Escape>', self.close)
-        self.addLogin.bind('<Return>', lambda x: self.checkPassword(self.entryPassw.get()))
+        self.addLogin.bind(
+            '<Return>', lambda x: self.checkPassword(self.entryPassw.get()))
 
-    #Valida senha
+    # Valida senha
     def checkPassword(self, passw):
         if passw == "aps@unip":
             self.addUserCam()
@@ -118,7 +124,7 @@ class Main():
 
     # Centraliza a janela
     def centerWindow(self, window):
-        
+
         window.update_idletasks()
 
         # Define o tamanhoda janela
