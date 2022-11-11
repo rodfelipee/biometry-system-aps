@@ -1,3 +1,4 @@
+# bibliotecas
 import cv2 as cv
 import ctypes
 import sys
@@ -30,7 +31,6 @@ class Main():
         # Botao Admin
         self.button1 = Button(self.inicio, text="Acessar como Administrador", justify=CENTER,
                               font=self.fonte, bg="#323232", fg="#FFFFFF", width=25, command=lambda: self.turnCamOn())
-        self.button1.bind(1)
         self.button1.place(relx=0.5, rely=0.5, y=-50, anchor='s')
 
         # Botao Operador
@@ -67,11 +67,19 @@ class Main():
                            justify=CENTER, font=self.fonte, bg='#202020', fg='#ffffff')
         self.texto.place(relx=0.5, rely=0.5, y=-100, anchor='s')
 
+<<<<<<< HEAD
+=======
+        # Textbox para inserir a senha mestre
+>>>>>>> b05c83d2d5f5cbe75c0058e47170fe149bddd623
         self.entryPassw = Entry(self.addLogin, justify=CENTER, font=self.fonte,
                                 bg='#505050', fg='#FFFFFF', width=25, show='*')
         self.entryPassw.place(relx=0.5, rely=0.5, y=-50, anchor='s')
         self.entryPassw.focus()
 
+<<<<<<< HEAD
+=======
+        # Botao de Submit
+>>>>>>> b05c83d2d5f5cbe75c0058e47170fe149bddd623
         self.btnEntrar = Button(self.addLogin, text='Entrar', font=self.fonte, width=25, justify=CENTER,
                                 bg='#303030', fg='#ffffff', command=lambda: self.checkPassword(self.entryPassw.get()))
         self.btnEntrar.place(relx=0.5, rely=0.5, y=-0, anchor='s')
@@ -96,7 +104,8 @@ class Main():
     def addUserCam(self):
         cam = cv.VideoCapture(0)
 
-        while(1):
+        # Loop que mantem a captura
+        while (1):
             ret, frame = cam.read()
             cv.imshow("Video", frame)
 
@@ -111,7 +120,7 @@ class Main():
     def turnCamOn(self):
         cam = cv.VideoCapture(0)
 
-        while(1):
+        while (1):
             ret, frame = cam.read()
             cv.imshow("Video", frame)
 
@@ -145,9 +154,11 @@ class Main():
 
         window.deiconify()
 
+    # Funcao para exibir mensagem de popup custom
     def Mbox(self, title, text, style):
         return ctypes.windll.user32.MessageBoxW(0, text, title, style)
 
 
+# Validando e chamando a main
 if __name__ == "__main__":
     main = Main()
