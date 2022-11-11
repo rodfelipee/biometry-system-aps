@@ -1,13 +1,12 @@
-# bibliotecas
+# Bibliotecas
 import cv2 as cv
 import ctypes
 import sys
 from tkinter import *
 
-# Inicializando a classe Main
-
 
 class Main():
+    # Inicializando a classe Main
     def __init__(self):
 
         # Criando a janela inicial
@@ -46,14 +45,16 @@ class Main():
         # Binds
         self.inicio.bind('<Escape>', self.close)
 
+        # Mantendo o Tk ativo em loop
         self.root.mainloop()
 
-    # Tela de acesso para registrar nova face
     def changeToaddLogin(self):
+        # Tela de acesso para registrar nova face
         self.inicio.withdraw()
         self.addUserLogin()
 
     def addUserLogin(self):
+        # Tela para adicionar um novo rosto
 
         # Parametros da janela
         self.addLogin = Toplevel()
@@ -77,24 +78,38 @@ class Main():
                                 bg='#303030', fg='#ffffff', command=lambda: self.checkPassword(self.entryPassw.get()))
         self.btnEntrar.place(relx=0.5, rely=0.5, y=-0, anchor='s')
 
+        # Botao para voltar a tela inicial
+        self.btnVoltar = Button(self.addLogin, text="Voltar", font=self.fonte, width=25, justify=CENTER,
+                                bg='#303030', fg='#ffffff', command=lambda: self.voltarInicio())
+        self.btnVoltar.place(relx=0.5, rely=0.5, y=50, anchor='s')
+
         # Binds
         self.addLogin.bind('<Escape>', self.close)
         self.addLogin.bind(
             '<Return>', lambda x: self.checkPassword(self.entryPassw.get()))
 
-    # Valida senha
+    def voltarInicio(self):
+        # Retorna a tela inicial
+        self.addLogin.withdraw()
+        self.__init__()
+
     def checkPassword(self, passw):
+        # Valida senha
         if passw == "aps@unip":
             self.addUserCam()
         else:
             self.Mbox('Acesso Negado', 'A senha inserida está incorreta', 1)
 
-    # Fechar aplicacao
     def close(self, event):
+        # Fechar aplicacao
         sys.exit(0)
 
-    # Chama a camera para registrar uma face
     def addUserCam(self):
+        # Chama a camera para registrar uma face
+        self.turnCamOn()
+
+    def turnCamOn(self):
+        # Inicializando a camera do dispositivo
         cam = cv.VideoCapture(0)
 
         # Loop que mantem a captura
@@ -109,23 +124,8 @@ class Main():
         cam.release()
         cv.destroyAllWindows()
 
-    # Inicializando a camera do dispositivo
-    def turnCamOn(self):
-        cam = cv.VideoCapture(0)
-
-        while (1):
-            ret, frame = cam.read()
-            cv.imshow("Video", frame)
-
-            k = cv.waitKey(30) & 0xff
-            if k == 27:
-                break
-
-        cam.release()
-        cv.destroyAllWindows()
-
-    # Centraliza a janela
     def centerWindow(self, window):
+        # Centraliza a janela
 
         window.update_idletasks()
 
@@ -147,8 +147,8 @@ class Main():
 
         window.deiconify()
 
-    # Funcao para exibir mensagem de popup custom
     def Mbox(self, title, text, style):
+        # Funcao para exibir mensagem de popup custom
         return ctypes.windll.user32.MessageBoxW(0, text, title, style)
 
 
