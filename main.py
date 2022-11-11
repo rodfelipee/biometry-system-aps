@@ -67,19 +67,12 @@ class Main():
                            justify=CENTER, font=self.fonte, bg='#202020', fg='#ffffff')
         self.texto.place(relx=0.5, rely=0.5, y=-100, anchor='s')
 
-<<<<<<< HEAD
-=======
-        # Textbox para inserir a senha mestre
->>>>>>> b05c83d2d5f5cbe75c0058e47170fe149bddd623
         self.entryPassw = Entry(self.addLogin, justify=CENTER, font=self.fonte,
                                 bg='#505050', fg='#FFFFFF', width=25, show='*')
         self.entryPassw.place(relx=0.5, rely=0.5, y=-50, anchor='s')
         self.entryPassw.focus()
 
-<<<<<<< HEAD
-=======
         # Botao de Submit
->>>>>>> b05c83d2d5f5cbe75c0058e47170fe149bddd623
         self.btnEntrar = Button(self.addLogin, text='Entrar', font=self.fonte, width=25, justify=CENTER,
                                 bg='#303030', fg='#ffffff', command=lambda: self.checkPassword(self.entryPassw.get()))
         self.btnEntrar.place(relx=0.5, rely=0.5, y=-0, anchor='s')
