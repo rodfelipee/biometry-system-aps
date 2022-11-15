@@ -1,7 +1,10 @@
 # Bibliotecas
 import cv2 as cv
+import face_recognition
 import ctypes
 import sys
+import os
+import numpy as np
 from tkinter import *
 
 
@@ -29,12 +32,12 @@ class Main():
 
         # Botao Admin
         self.button1 = Button(self.inicio, text="Acessar como Administrador", justify=CENTER,
-                              font=self.fonte, bg="#323232", fg="#FFFFFF", width=25, command=lambda: self.turnCamOn())
+                              font=self.fonte, bg="#323232", fg="#FFFFFF", width=25, command=lambda: self.validateUser())
         self.button1.place(relx=0.5, rely=0.5, y=-50, anchor='s')
 
         # Botao Operador
         self.button2 = Button(self.inicio, text="Acessar como Operador", justify=CENTER, font=self.fonte,
-                              bg="#323232", fg="#FFFFFF", width=25, command=lambda: self.turnCamOn())
+                              bg="#323232", fg="#FFFFFF", width=25, command=lambda: self.validateUser())
         self.button2.place(relx=0.5, rely=0.5, y=0, anchor='s')
 
         # Botao adicionar rosto
@@ -98,31 +101,82 @@ class Main():
         if passw == "aps@unip":
             self.addUserCam()
         else:
-            self.Mbox('Acesso Negado', 'A senha inserida está incorreta', 1)
+            self.Mbox('Acesso Negado', 'A senha inserida está incorreta', 0)
 
     def close(self, event):
         # Fechar aplicacao
         sys.exit(0)
 
     def addUserCam(self):
-        # Chama a camera para registrar uma face
-        self.turnCamOn()
+        # Inicializando a camera do dispositivo
+        cam = cv.VideoCapture(0)
+        img_count  = 0
 
-    def turnCamOn(self):
+        self.Mbox('Info', 'Pressione a tecla Space para capturar uma imagem.', 0)
+
+        # Loop que mantem a captura
+        while not cv.waitKey(5) & 0xff == 27:
+            ret, frame = cam.read()
+            cv.imshow("Video", frame)
+
+            if cv.waitKey(5) == 32:
+                img_name = "./img/img_frame_{}.png".format(img_count)
+                cv.imwrite(img_name, frame)
+                img_count += 1
+                self.Mbox('Imagem Salva!', 'A imagem foi salva com sucesso na pasta "img"', 0)
+
+
+        cam.release()
+        cv.destroyAllWindows()
+
+
+    def load_images_from_folder(self, folder):
+        images = []
+        for filename in os.listdir(folder):
+            img = cv.imread(os.path.join(folder,filename))
+            if img is not None:
+                images.append(img)
+        return images
+
+    def validateUser(self):
+
+        admin_faces = self.load_images_from_folder("./img/admin/")
+        print(admin_faces)
+        
+        operator_imgs = self.load_images_from_folder('./img/operator/')
+
+        
+
+        face_locations = []
+        face_encodings = []
+        s = True
+
         # Inicializando a camera do dispositivo
         cam = cv.VideoCapture(0)
 
         # Loop que mantem a captura
-        while (1):
+        while not cv.waitKey(5) & 0xff == 27:
             ret, frame = cam.read()
-            cv.imshow("Video", frame)
-
-            k = cv.waitKey(30) & 0xff
-            if k == 27:
-                break
+            small_frame = cv.resize(frame,(0,0),fx=0.25,fy=0.25)
+            rgb_small_file = small_frame[:,:,::-1]
+            if s:
+                face_locations = face_recognition.face_locations(rgb_small_file)
+                face_encodings = face_recognition.face_encodings(rgb_small_file,face_locations)
+                for face_encoding in face_encodings:
+                    matches = face_recognition.compare_faces(admin_faces, face_encoding)
+                    face_distance = face_recognition.face_distance(admin_faces, face_encoding)
+                    best_match_index = np.argmin(face_distance)
+                    if matches[best_match_index]:
+                        self.Mbox('Acesso Permitido', 'Perfil Administrador!\nVocê está autorizado a utilizar o sistema!', 0)
+            cv.imshow("video", frame)
 
         cam.release()
         cv.destroyAllWindows()
+
+    # Fechar aplicacao
+    def close(self, event):
+        sys.exit(0)
+
 
     def centerWindow(self, window):
         # Centraliza a janela
