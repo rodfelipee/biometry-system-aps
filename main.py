@@ -3,7 +3,6 @@ import cv2 as cv
 import face_recognition
 import ctypes
 import sys
-import os
 import numpy as np
 from tkinter import *
 
@@ -30,20 +29,25 @@ class Main():
                           justify=CENTER, font=self.fonte, bg='#202020', fg='#ffffff')
         self.text.place(relx=0.5, rely=0.5, y=-150, anchor='s')
 
-        # Botao Admin
-        self.button1 = Button(self.inicio, text="Acessar como Administrador", justify=CENTER,
+        # Botao nivel 3
+        self.button1 = Button(self.inicio, text="Acesso nivel 3", justify=CENTER,
                               font=self.fonte, bg="#323232", fg="#FFFFFF", width=25, command=lambda: self.validateUser())
         self.button1.place(relx=0.5, rely=0.5, y=-50, anchor='s')
 
-        # Botao Operador
-        self.button2 = Button(self.inicio, text="Acessar como Operador", justify=CENTER, font=self.fonte,
+        # Botao nivel 2
+        self.button2 = Button(self.inicio, text="Acesso nivel 2", justify=CENTER, font=self.fonte,
                               bg="#323232", fg="#FFFFFF", width=25, command=lambda: self.validateUser())
         self.button2.place(relx=0.5, rely=0.5, y=0, anchor='s')
 
+        #Botao nivel 1
+        self.button3 = Button(self.inicio, text="Acesso nível 1", justify=CENTER, font=self.fonte,
+                              bg="#323232", fg="#FFFFFF", width=25, command=lambda: self.validateUser())
+        self.button3.place(relx=0.5, rely=0.5, y=120, anchor='s')
+
         # Botao adicionar rosto
-        self.button3 = Button(self.inicio, text="Adicionar um novo rosto", justify=CENTER, font=self.fonte,
+        self.button4 = Button(self.inicio, text="Adicionar um novo rosto", justify=CENTER, font=self.fonte,
                               bg="#323232", fg="#FFFFFF", width=25, command=lambda: self.changeToaddLogin())
-        self.button3.place(relx=0.5, rely=0.5, y=225, anchor='s')
+        self.button4.place(relx=0.5, rely=0.5, y=225, anchor='s')
 
         # Binds
         self.inicio.bind('<Escape>', self.close)
@@ -129,52 +133,75 @@ class Main():
         cam.release()
         cv.destroyAllWindows()
 
-
-    def load_images_from_folder(self, folder):
-        images = []
-        for filename in os.listdir(folder):
-            img = cv.imread(os.path.join(folder,filename))
-            if img is not None:
-                images.append(img)
-        return images
-
     def validateUser(self):
 
-        admin_faces = self.load_images_from_folder("./img/admin/")
-        print(admin_faces)
-        
-        operator_imgs = self.load_images_from_folder('./img/operator/')
+        # Inicializando a camera do dispositivo
+        cam = cv.VideoCapture(0)
 
-        
+        # Carregando imagem do perfil nivel 3
+        nivel3_face_load = face_recognition.load_image_file("./img/nv3/hasbulla_ministro.jpg")
+        nivel3_face_encode = face_recognition.face_encodings(nivel3_face_load)
+
+        # Carregando imagem do perfil nivel 2
+        nivel2_face_load = self.load_images_from_folder("./img/nv2/fallen_diretor.png")
+        nivel2_face_encode = face_recognition.face_encodings(nivel2_face_load)
+
+        # Carregando imagem do perfil nivel 1
+        nivel1_face_load = face_recognition.load_image_file("./img/nv1/ellon_geral.jpg")
+        nivel1_face_encode = face_recognition.face_encodings(nivel1_face_load)
 
         face_locations = []
         face_encodings = []
         s = True
 
-        # Inicializando a camera do dispositivo
-        cam = cv.VideoCapture(0)
-
         # Loop que mantem a captura
         while not cv.waitKey(5) & 0xff == 27:
+            # Executando leitura da camera
             ret, frame = cam.read()
+            # Redimensionando o frame
             small_frame = cv.resize(frame,(0,0),fx=0.25,fy=0.25)
+            #convertendo o frame de bgr para rgb
             rgb_small_file = small_frame[:,:,::-1]
             if s:
                 face_locations = face_recognition.face_locations(rgb_small_file)
                 face_encodings = face_recognition.face_encodings(rgb_small_file,face_locations)
+                # Comparacao nivel 3
                 for face_encoding in face_encodings:
-                    matches = face_recognition.compare_faces(admin_faces, face_encoding)
-                    face_distance = face_recognition.face_distance(admin_faces, face_encoding)
-                    best_match_index = np.argmin(face_distance)
-                    if matches[best_match_index]:
-                        self.Mbox('Acesso Permitido', 'Perfil Administrador!\nVocê está autorizado a utilizar o sistema!', 0)
-            cv.imshow("video", frame)
-
+                    nivel3_matches = face_recognition.compare_faces(nivel3_face_encode, face_encoding)
+                    nivel3_face_distance = face_recognition.face_distance(nivel3_face_encode, face_encoding)
+                    nivel3_best_match_index = np.argmin(nivel3_face_distance)
+                    # Validando a imagem
+                    if nivel3_matches[nivel3_best_match_index]:
+                        self.Mbox('Acesso Permitido', 'Perfil Ministro!\nAcesso nível 3!\nVocê esta autorizado a utilizar o sistema!', 0)
+                    else:
+                        self.Mbox('Acesso Negado', 'O rosto não foi reconhecido!', 0)
+                # Comparacao nivel 2
+                for face_encoding in face_encodings:
+                    nivel2_matches = face_recognition.compare_faces(nivel2_face_encode, face_encoding)
+                    nivel2_face_distance = face_recognition.face_distance(nivel2_face_encode, face_encoding)
+                    nivel2_best_match_index = np.argmin(nivel2_face_distance)
+                    # Validando a imagem
+                    if nivel2_matches[nivel2_best_match_index]:
+                        self.Mbox('Acesso Permitido', 'Perfil Diretor!\nAcesso nível 2!\nVocê esta autorizado a utilizar o sistema!', 0)
+                    else:
+                        self.Mbox('Acesso Negado', 'O rosto não foi reconhecido!', 0)
+                # Comparacao nivel 1
+                for face_encoding in face_encodings:
+                    nivel1_matches = face_recognition.compare_faces(nivel1_face_encode, face_encoding)
+                    nivel1_face_distance = face_recognition.face_distance(nivel1_face_encode, face_encoding)
+                    nivel1_best_match_index = np.argmin(nivel1_face_distance)
+                    # Validando a imagem
+                    if nivel1_matches[nivel1_best_match_index]:
+                        self.Mbox('Acesso Permitido', 'Perfil Diretor!\nAcesso nível 2!\nVocê esta autorizado a utilizar o sistema!', 0)
+                    else:
+                        self.Mbox('Acesso Negado', 'O rosto não foi reconhecido!', 0)
+            # Exibindo a imagem da camera
+            cv.imshow("Video", frame)
         cam.release()
         cv.destroyAllWindows()
 
-    # Fechar aplicacao
     def close(self, event):
+    # Fechar aplicacao
         sys.exit(0)
 
 
